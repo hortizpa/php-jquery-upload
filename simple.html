@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+    <meta charset="utf-8">
+    <title>Ajax File Upload with jQuery and PHP</title>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Ajax File Uploading</h1>
+    <br />
+    <form id="form" action="up.php" method="post" enctype="multipart/form-data">
+        <label for="name">NOMBRE</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Escriba su nombre" required />
+        <br />
+        <label for="email">EMAIL</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Escriba su email" required />
+        <br />
+        <input id="uploadImage" type="file" accept="image/*" name="image" class="btn btn-primary" required />
+        <br />
+        <input class="btn btn-primary" type="submit" value="Subir">
+        <br />
+        <div id="info" hidden>
+    </form>
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $("#form").on('submit',(function(e) {
+            e.preventDefault();
+            $.ajax({
+                    url: "up.php",
+                    type: "POST",
+                    data: new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    beforeSend : function()
+                        {
+                            $("#info").fadeOut();
+                        },
+                    success: function(data)
+                        {
+                            if(data=='invalid')
+                            {
+                                $("#info").html("Archivo no válido!").fadeIn();
+                            }
+                            else
+                            {
+                                $("#info").html(data).fadeIn();
+                                $("#form")[0].reset(); 
+                            }
+                        },
+                    error: function(e) 
+                    {
+                        $("#info").html(e).fadeIn();
+                    }          
+                });
+            }));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+    <meta charset="utf-8">
+    <title>Ajax File Upload with jQuery and PHP</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Ajax File Uploading</h1>
+                <hr> 
+                <form id="form" action="up.php" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="name">NOMBRE</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Escriba su nombre" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">EMAIL</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Escriba su email" required />
+                    </div>
+                    <div class="form-group">
+                        <!-- input id="uploadImage" type="file" accept="image/*" name="image" class="btn btn-primary" required / -->
+                        <label for="uploadImage">Elija el archivo</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="uploadImage">
+                            <label class="custom-file-label" for="uploadImage">...</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input class="btn btn-primary" type="submit" value="Subir">
+                    </div>
+                    <div class="form-group">
+                        <div id="info" class="alert alert-info" hidden>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $("#form").on('submit',(function(e) {
+            e.preventDefault();
+            $.ajax({
+                    url: "up.php",
+                    type: "POST",
+                    data: new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    beforeSend : function()
+                        {
+                            $("#info").fadeOut();
+                        },
+                    success: function(data)
+                        {
+                            if(data=='invalid')
+                            {
+                                $("#info").html("Archivo no válido!").fadeIn();
+                            }
+                            else
+                            {
+                                $("#info").html(data).fadeIn();
+                                $("#form")[0].reset(); 
+                            }
+                        },
+                    error: function(e) 
+                    {
+                        $("#info").html(e).fadeIn();
+                    }          
+                });
+            }));
+        });
+    </script>
+</body>
+</html>
